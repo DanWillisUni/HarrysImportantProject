@@ -1,5 +1,6 @@
 ﻿using HarrysImportantProject.Configuration.Models;
 using HarrysImportantProject.Services.Publisher;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,22 +13,25 @@ namespace HarrysImportantProject.Services
     {
         private readonly BasicServiceConfiguration _configuration;
         private readonly IPublisher.PublisherResolver _publisherResolver;
-        public BasicService(BasicServiceConfiguration configuration, IPublisher.PublisherResolver publisherResolver)
+        private readonly ILogger<BasicService> _logger;
+        public BasicService(BasicServiceConfiguration configuration, IPublisher.PublisherResolver publisherResolver, ILogger<BasicService> logger)
         {
             _configuration = configuration;
             _publisherResolver = publisherResolver;
+            _logger = logger;
         }
         public void root()
         {
+            _logger.LogInformation("BasicService started");
             IPublisher publisher = _publisherResolver(_configuration.Publisher);
             if (publisher == null)
             {
+                _logger.LogError("Publisher not found");
                 throw new Exception("Publisher not found");
             }
-            else
-            {
-                publisher.Publish("This is my password " + _configuration.MyPassword);
-            }
+            _logger.LogInformation("Publisher found: " + _configuration.Publisher);
+            publisher.Publish("This is my password " + _configuration.MyPassword);
+            _logger.LogInformation("BasicService finished");
         }
     }
 }
