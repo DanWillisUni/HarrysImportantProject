@@ -71,6 +71,7 @@ namespace HarrysImportantProject
             _serviceCollection.AddLogging(cfg => cfg.AddSerilog()).Configure<LoggerFilterOptions>(cfg => cfg.MinLevel = LogLevel.Debug);
             _serviceCollection.AddSingleton<BasicService>();
 
+            _serviceCollection.AddSingleton<PublisherFactory>();
             _serviceCollection.AddTransient<EmailPublisher>();
             _serviceCollection.AddTransient<ConsolePublisher>();
             _serviceCollection.AddTransient<FilePublisher>();

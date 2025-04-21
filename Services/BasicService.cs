@@ -12,18 +12,18 @@ namespace HarrysImportantProject.Services
     public class BasicService
     {
         private readonly BasicServiceConfiguration _configuration;
-        private readonly IPublisher.PublisherResolver _publisherResolver;
+        private readonly PublisherFactory _publisherFactory;
         private readonly ILogger<BasicService> _logger;
-        public BasicService(BasicServiceConfiguration configuration, IPublisher.PublisherResolver publisherResolver, ILogger<BasicService> logger)
+        public BasicService(BasicServiceConfiguration configuration, PublisherFactory publisherFactory, ILogger<BasicService> logger)
         {
             _configuration = configuration;
-            _publisherResolver = publisherResolver;
+            _publisherFactory = publisherFactory;
             _logger = logger;
         }
         public void root()
         {
             _logger.LogInformation("BasicService started");
-            IPublisher publisher = _publisherResolver(_configuration.Publisher);
+            IPublisher publisher = _publisherFactory.CreatePublisher(_configuration.Publisher);
             if (publisher == null)
             {
                 _logger.LogError("Publisher not found");
